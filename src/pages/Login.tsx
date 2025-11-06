@@ -10,16 +10,44 @@ import { toast } from "sonner";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // <--- ADICIONADO
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => { // <--- 'async' ADICIONADO
     e.preventDefault();
-    
-    if (email && password) {
+    setIsLoading(true); // Bloqueia o formulário
+
+    // A lógica falsa foi substituída por esta chamada de API
+    try {
+      // 1. Chamar seu backend
+      const response = await fetch("http://localhost:3000/usuarios/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      // 2. Tratar erro do backend
+      if (!response.ok) {
+        throw new Error(data.message || "Falha ao tentar fazer login");
+      }
+
+      // 3. Tratar sucesso
       toast.success("Login realizado com sucesso!");
+
+      // Salva o token no localStorage para usar depois
+      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
       navigate("/dashboard");
-    } else {
-      toast.error("Por favor, preencha todos os campos");
+    } catch (error: any) {
+      // 4. Mostrar erro no toast
+      toast.error(error.message || "Erro ao conectar com o servidor.");
+    } finally {
+      setIsLoading(false); // Libera o formulário
     }
   };
 
@@ -46,6 +74,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={isLoading} // <--- ADICIONADO
             />
           </div>
 
@@ -58,11 +87,13 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={isLoading} // <--- ADICIONADO
             />
           </div>
 
-          <Button type="submit" className="w-full">
-            Entrar
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {/* Muda o texto do botão durante o loading */}
+            {isLoading ? "Entrando..." : "Entrar"}
           </Button>
         </form>
       </Card>
