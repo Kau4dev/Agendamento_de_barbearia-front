@@ -20,7 +20,7 @@ const Login = () => {
     // A lógica falsa foi substituída por esta chamada de API
     try {
       // 1. Chamar seu backend
-      const response = await fetch("http://localhost:3000/usuarios/login", {
+      const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
