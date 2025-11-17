@@ -2,7 +2,8 @@ import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, Phone, Mail } from "lucide-react";
+import { Search, Phone, Mail } from "lucide-react";
+import { AdicionarCliente } from "@/components/forms/AdicionarCliente";
 
 const clients = [
   { 
@@ -56,10 +57,7 @@ const Clientes = () => {
             <h1 className="text-3xl font-bold text-foreground">Clientes</h1>
             <p className="text-muted-foreground">Gerencie seus clientes</p>
           </div>
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" />
-            Adicionar Cliente
-          </Button>
+          <AdicionarCliente />
         </div>
 
         <Card className="p-6">

@@ -1,7 +1,8 @@
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Phone, Mail } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
+import { AdicionarBarbeiro } from "@/components/forms/AdicionarBarbeiro";
 
 const barbers = [
   { 
@@ -51,10 +52,7 @@ const Barbeiros = () => {
             <h1 className="text-3xl font-bold text-foreground">Barbeiros</h1>
             <p className="text-muted-foreground">Gerencie sua equipe</p>
           </div>
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" />
-            Adicionar Barbeiro
-          </Button>
+          <AdicionarBarbeiro />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

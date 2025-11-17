@@ -1,7 +1,8 @@
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
+import { NovoAgendamento } from "@/components/forms/NovoAgendamento";
 
 const appointments = [
   { id: 1, time: "09:00", client: "João Silva", barber: "Carlos", service: "Corte + Barba", status: "confirmed" },
@@ -20,10 +21,7 @@ const Agenda = () => {
             <h1 className="text-3xl font-bold text-foreground">Agenda</h1>
             <p className="text-muted-foreground">Gerencie seus agendamentos</p>
           </div>
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" />
-            Novo Agendamento
-          </Button>
+          <NovoAgendamento />
         </div>
 
         <Card className="p-6">
