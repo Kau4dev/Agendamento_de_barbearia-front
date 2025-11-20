@@ -1,6 +1,7 @@
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Calendar, Users, Scissors, TrendingUp } from "lucide-react";
+import { AdicionarUsuario } from "@/components/forms/AdicionarUsuario";
 
 const statsCards = [
   { title: "Agendamentos Hoje", value: "12", icon: Calendar, trend: "+3 desde ontem" },
@@ -19,9 +20,12 @@ const Dashboard = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground">Visão geral do seu negócio</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+            <p className="text-muted-foreground">Visão geral do seu negócio</p>
+          </div>
+          <AdicionarUsuario />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

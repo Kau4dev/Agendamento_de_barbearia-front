@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Phone, Mail } from "lucide-react";
 import { AdicionarBarbeiro } from "@/components/forms/AdicionarBarbeiro";
+import { DetalhesBarbeiro } from "@/components/forms/DetalhesBarbeiro";
 
-const barbers = [
+const initialBarbers = [
   { 
     id: 1, 
     name: "Carlos Silva", 
@@ -44,6 +45,18 @@ const barbers = [
 ];
 
 const Barbeiros = () => {
+  const [barbers, setBarbers] = useState(initialBarbers);
+
+  const handleUpdateBarber = (id: number, data: any) => {
+    setBarbers(barbers.map(barber => 
+      barber.id === id ? { ...barber, ...data } : barber
+    ));
+  };
+
+  const handleDeleteBarber = (id: number) => {
+    setBarbers(barbers.filter(barber => barber.id !== id));
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -90,7 +103,11 @@ const Barbeiros = () => {
                 <p className="text-sm text-muted-foreground mb-3">
                   {barber.appointments} agendamentos este mês
                 </p>
-                <Button variant="outline" className="w-full">Ver Detalhes</Button>
+                <DetalhesBarbeiro 
+                  barber={barber}
+                  onUpdate={handleUpdateBarber}
+                  onDelete={handleDeleteBarber}
+                />
               </div>
             </Card>
           ))}

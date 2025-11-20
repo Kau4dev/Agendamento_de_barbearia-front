@@ -1,9 +1,9 @@
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Phone, Mail } from "lucide-react";
 import { AdicionarCliente } from "@/components/forms/AdicionarCliente";
+import { PerfilCliente } from "@/components/forms/PerfilCliente";
 
 const clients = [
   { 
@@ -106,7 +106,7 @@ const Clientes = () => {
                     <p className="text-sm text-muted-foreground">Total de visitas</p>
                     <p className="text-sm font-medium text-primary">{client.totalVisits}</p>
                   </div>
-                  <Button variant="outline" size="sm">Ver Perfil</Button>
+                  <PerfilCliente client={client} />
                 </div>
               </div>
             ))}
