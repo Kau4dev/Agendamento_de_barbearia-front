@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Plus, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
+import { NovoAgendamento } from "@/components/forms/NovoAgendamento";
+import { DetalhesAgendamento } from "@/components/forms/DetalhesAgendamento";
 
-const appointments = [
+const initialAppointments = [
   { id: 1, time: "09:00", client: "João Silva", barber: "Carlos", service: "Corte + Barba", status: "confirmed" },
   { id: 2, time: "10:00", client: "Pedro Santos", barber: "Roberto", service: "Corte", status: "confirmed" },
   { id: 3, time: "11:30", client: "Lucas Oliveira", barber: "Carlos", service: "Barba", status: "pending" },
@@ -12,6 +14,18 @@ const appointments = [
 ];
 
 const Agenda = () => {
+  const [appointments, setAppointments] = useState(initialAppointments);
+
+  const handleUpdateAppointment = (id: number, data: any) => {
+    setAppointments(appointments.map(apt => 
+      apt.id === id ? { ...apt, ...data } : apt
+    ));
+  };
+
+  const handleDeleteAppointment = (id: number) => {
+    setAppointments(appointments.filter(apt => apt.id !== id));
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -20,10 +34,7 @@ const Agenda = () => {
             <h1 className="text-3xl font-bold text-foreground">Agenda</h1>
             <p className="text-muted-foreground">Gerencie seus agendamentos</p>
           </div>
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" />
-            Novo Agendamento
-          </Button>
+          <NovoAgendamento />
         </div>
 
         <Card className="p-6">
@@ -59,7 +70,11 @@ const Agenda = () => {
                   >
                     {appointment.status === "confirmed" ? "Confirmado" : "Pendente"}
                   </span>
-                  <Button variant="outline" size="sm">Detalhes</Button>
+                  <DetalhesAgendamento 
+                    appointment={appointment}
+                    onUpdate={handleUpdateAppointment}
+                    onDelete={handleDeleteAppointment}
+                  />
                 </div>
               </div>
             ))}

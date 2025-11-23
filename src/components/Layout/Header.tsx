@@ -1,5 +1,7 @@
-import { Menu, Bell } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { NotificationsSheet } from "@/components/NotificationsSheet";
+import { PerfilUsuario } from "@/components/forms/PerfilUsuario";
 
 export const Header = () => {
   return (
@@ -13,15 +15,8 @@ export const Header = () => {
       </div>
 
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
-        </Button>
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center">
-            <span className="text-sm font-medium text-primary">AD</span>
-          </div>
-        </div>
+        <NotificationsSheet />
+        <PerfilUsuario />
       </div>
     </header>
   );

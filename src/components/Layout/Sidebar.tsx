@@ -1,4 +1,4 @@
-import { Calendar, Users, Scissors, LayoutDashboard, LogOut } from "lucide-react";
+import { Calendar, Users, Scissors, LayoutDashboard, LogOut, Sparkles } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { cn } from "@/lib/utils";
 
@@ -7,6 +7,7 @@ const menuItems = [
   { icon: Calendar, label: "Agenda", path: "/agenda" },
   { icon: Scissors, label: "Barbeiros", path: "/barbeiros" },
   { icon: Users, label: "Clientes", path: "/clientes" },
+  { icon: Sparkles, label: "Serviços", path: "/servicos" },
 ];
 
 export const Sidebar = () => {
