@@ -2,8 +2,7 @@
 
 Este é o repositório frontend do projeto **Agendamento de Barbearia**, desenvolvido com **Vite**, **React**, **TypeScript**, **Tailwind CSS** e **shadcn-ui**.
 
-Abaixo está uma visão geral atualizada do projeto com base nos arquivos e estrutura visíveis no repositório.
-
+Abaixo está uma visão geral atualizada do projeto 
 ---
 
 ## 📦 Tecnologias Utilizadas
