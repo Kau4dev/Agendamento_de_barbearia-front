@@ -94,7 +94,7 @@ Mais detalhes: [https://docs.lovable.dev/features/custom-domain#custom-domain](h
 ## 👤 Contribuidores (grupo)
 
 * Erick Schinneyder (RGM 44093888)
-* Kauã
+* Kauã Victor (RGM 38994151)
 * Felipe de Oliveira (RGM:42862451)
 
 ---
