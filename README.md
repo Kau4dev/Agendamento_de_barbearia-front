@@ -16,12 +16,12 @@ Abaixo está uma visão geral atualizada do projeto com base nos arquivos e estr
 
 ---
 
-## 📁 Estrutura do Projeto (com base no repositório)
+## 📁 Estrutura do Projeto 
 
 ### Diretórios principais
 
 * **public/** – Arquivos públicos utilizados no projeto.
-* **src/** – Código-fonte do aplicativo (componentes, páginas, lógicas, estilização, etc.).
+* **src/** – Código-fonte  (componentes, páginas, lógicas, estilização, etc.).
 
 ### Arquivos importantes
 
