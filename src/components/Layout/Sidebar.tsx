@@ -1,6 +1,14 @@
-import { Calendar, Users, Scissors, LayoutDashboard, LogOut, Sparkles } from "lucide-react";
+import {
+  Calendar,
+  Users,
+  Scissors,
+  LayoutDashboard,
+  LogOut,
+  Sparkles,
+} from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -11,6 +19,13 @@ const menuItems = [
 ];
 
 export const Sidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <aside className="hidden md:flex h-screen w-64 flex-col bg-sidebar border-r border-sidebar-border">
       <div className="p-6 border-b border-sidebar-border">
@@ -19,7 +34,9 @@ export const Sidebar = () => {
             <Scissors className="w-6 h-6 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-sidebar-foreground">Barber</h1>
+            <h1 className="text-xl font-bold text-sidebar-foreground">
+              Barberia
+            </h1>
             <p className="text-xs text-sidebar-foreground/60">Sistema Pro</p>
           </div>
         </div>
@@ -40,7 +57,10 @@ export const Sidebar = () => {
       </nav>
 
       <div className="p-4 border-t border-sidebar-border">
-        <button className="flex items-center gap-3 px-4 py-3 rounded-lg text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all w-full">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 rounded-lg text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all w-full"
+        >
           <LogOut className="w-5 h-5" />
           <span>Sair</span>
         </button>
