@@ -1,4 +1,11 @@
-import { Calendar, Users, Scissors, LayoutDashboard, LogOut, Sparkles } from "lucide-react";
+import {
+  Calendar,
+  Users,
+  Scissors,
+  LayoutDashboard,
+  LogOut,
+  Sparkles,
+} from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +26,9 @@ export const Sidebar = () => {
             <Scissors className="w-6 h-6 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-sidebar-foreground">Barber</h1>
+            <h1 className="text-xl font-bold text-sidebar-foreground">
+              Barberia
+            </h1>
             <p className="text-xs text-sidebar-foreground/60">Sistema Pro</p>
           </div>
         </div>
