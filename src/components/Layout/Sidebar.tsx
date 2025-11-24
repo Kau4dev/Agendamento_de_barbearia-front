@@ -35,7 +35,7 @@ export const Sidebar = () => {
           </div>
           <div>
             <h1 className="text-xl font-bold text-sidebar-foreground">
-              Barberia
+              Barber
             </h1>
             <p className="text-xs text-sidebar-foreground/60">Sistema Pro</p>
           </div>
