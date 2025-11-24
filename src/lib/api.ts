@@ -12,6 +12,11 @@ import type {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
+// Log para debug (remover em produção)
+if (import.meta.env.DEV) {
+  console.log("🔗 API URL:", API_BASE_URL);
+}
+
 class ApiService {
   private axios: AxiosInstance;
 

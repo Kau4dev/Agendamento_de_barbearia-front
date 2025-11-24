@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -18,6 +19,13 @@ const menuItems = [
 ];
 
 export const Sidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <aside className="hidden md:flex h-screen w-64 flex-col bg-sidebar border-r border-sidebar-border">
       <div className="p-6 border-b border-sidebar-border">
@@ -49,7 +57,10 @@ export const Sidebar = () => {
       </nav>
 
       <div className="p-4 border-t border-sidebar-border">
-        <button className="flex items-center gap-3 px-4 py-3 rounded-lg text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all w-full">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 rounded-lg text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all w-full"
+        >
           <LogOut className="w-5 h-5" />
           <span>Sair</span>
         </button>
