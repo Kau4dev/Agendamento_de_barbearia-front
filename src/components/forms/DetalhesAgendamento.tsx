@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -28,20 +27,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { User, Scissors, Calendar, Clock, Trash2 } from "lucide-react";
-
-interface Appointment {
-  id: number;
-  time: string;
-  client: string;
-  barber: string;
-  service: string;
-  status: string;
-}
+import { User, Scissors, Clock, Trash2 } from "lucide-react";
+import type { Agendamento } from "@/types";
+import { api } from "@/lib/api";
+import { AvaliarBarbeiro } from "./AvaliarBarbeiro";
 
 interface DetalhesAgendamentoProps {
-  appointment: Appointment;
-  onUpdate: (id: number, data: Partial<Appointment>) => void;
+  appointment: Agendamento;
+  onUpdate?: () => void;
   onDelete: (id: number) => void;
 }
 
@@ -51,48 +44,48 @@ export const DetalhesAgendamento = ({
   onDelete,
 }: DetalhesAgendamentoProps) => {
   const [open, setOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const [formData, setFormData] = useState({
-    client: appointment.client,
-    time: appointment.time,
-    barber: appointment.barber,
-    service: appointment.service,
-    status: appointment.status,
-  });
+  const [selectedStatus, setSelectedStatus] = useState(appointment.status);
 
-  useEffect(() => {
-    setFormData({
-      client: appointment.client,
-      time: appointment.time,
-      barber: appointment.barber,
-      service: appointment.service,
-      status: appointment.status,
-    });
-  }, [appointment]);
-
-  const handleSave = () => {
-    onUpdate(appointment.id, formData);
-    toast({
-      title: "Agendamento atualizado",
-      description: "As alterações foram salvas com sucesso.",
-    });
-    setIsEditing(false);
-    setOpen(false);
+  const handleStatusChange = async (newStatus: string) => {
+    setLoading(true);
+    try {
+      await api.agendamentos.updateStatus(
+        appointment.id,
+        newStatus as "PENDENTE" | "CONFIRMADO" | "CANCELADO" | "CONCLUIDO"
+      );
+      setSelectedStatus(newStatus);
+      toast({
+        title: "Status atualizado",
+        description: "O status do agendamento foi atualizado com sucesso.",
+      });
+      if (onUpdate) onUpdate();
+    } catch (error: unknown) {
+      toast({
+        title: "Erro",
+        description: "Erro ao atualizar status",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = () => {
     onDelete(appointment.id);
-    toast({
-      title: "Agendamento excluído",
-      description: "O agendamento foi removido com sucesso.",
-      variant: "destructive",
-    });
     setShowDeleteDialog(false);
     setOpen(false);
   };
+
+  const dataHora = new Date(appointment.dataHora);
+  const horario = dataHora.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const data = dataHora.toLocaleDateString("pt-BR");
 
   return (
     <>
@@ -106,172 +99,117 @@ export const DetalhesAgendamento = ({
           <DialogHeader>
             <DialogTitle>Detalhes do Agendamento</DialogTitle>
             <DialogDescription>
-              {isEditing
-                ? "Edite as informações do agendamento"
-                : "Informações completas do agendamento"}
+              Informações completas do agendamento
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-6 py-4">
             <div className="grid grid-cols-2 gap-4">
+              {/* Cliente */}
               <div className="space-y-2">
-                <Label htmlFor="client">Cliente</Label>
-                {isEditing ? (
-                  <Input
-                    id="client"
-                    value={formData.client}
-                    onChange={(e) =>
-                      setFormData({ ...formData, client: e.target.value })
-                    }
-                  />
-                ) : (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
-                    <User className="w-4 h-4 text-primary" />
-                    <span className="font-medium">{appointment.client}</span>
-                  </div>
-                )}
+                <Label>Cliente</Label>
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
+                  <User className="w-4 h-4 text-primary" />
+                  <span className="font-medium">
+                    {appointment.cliente?.nome || "Cliente"}
+                  </span>
+                </div>
               </div>
 
+              {/* Data e Horário */}
               <div className="space-y-2">
-                <Label htmlFor="time">Horário</Label>
-                {isEditing ? (
-                  <Input
-                    id="time"
-                    type="time"
-                    value={formData.time}
-                    onChange={(e) =>
-                      setFormData({ ...formData, time: e.target.value })
-                    }
-                  />
-                ) : (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
-                    <Clock className="w-4 h-4 text-primary" />
-                    <span className="font-medium">{appointment.time}</span>
-                  </div>
-                )}
+                <Label>Data e Horário</Label>
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
+                  <Clock className="w-4 h-4 text-primary" />
+                  <span className="font-medium">
+                    {data} às {horario}
+                  </span>
+                </div>
               </div>
 
+              {/* Barbeiro */}
               <div className="space-y-2">
-                <Label htmlFor="barber">Barbeiro</Label>
-                {isEditing ? (
-                  <Select
-                    value={formData.barber}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, barber: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Carlos">Carlos</SelectItem>
-                      <SelectItem value="Roberto">Roberto</SelectItem>
-                      <SelectItem value="André">André</SelectItem>
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
-                    <User className="w-4 h-4 text-primary" />
-                    <span className="font-medium">{appointment.barber}</span>
-                  </div>
-                )}
+                <Label>Barbeiro</Label>
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
+                  <User className="w-4 h-4 text-primary" />
+                  <span className="font-medium">
+                    {appointment.barbeiro?.nome || "Barbeiro"}
+                  </span>
+                </div>
               </div>
 
+              {/* Serviço */}
               <div className="space-y-2">
-                <Label htmlFor="service">Serviço</Label>
-                {isEditing ? (
-                  <Select
-                    value={formData.service}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, service: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Corte">Corte</SelectItem>
-                      <SelectItem value="Barba">Barba</SelectItem>
-                      <SelectItem value="Corte + Barba">Corte + Barba</SelectItem>
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
-                    <Scissors className="w-4 h-4 text-primary" />
-                    <span className="font-medium">{appointment.service}</span>
-                  </div>
-                )}
+                <Label>Serviço</Label>
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
+                  <Scissors className="w-4 h-4 text-primary" />
+                  <span className="font-medium">
+                    {appointment.servico?.nome || "Serviço"}
+                  </span>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                {isEditing ? (
-                  <Select
-                    value={formData.status}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, status: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="confirmed">Confirmado</SelectItem>
-                      <SelectItem value="pending">Pendente</SelectItem>
-                      <SelectItem value="cancelled">Cancelado</SelectItem>
-                    </SelectContent>
-                  </Select>
-                ) : (
+              {/* Preço */}
+              {appointment.servico?.preco && (
+                <div className="space-y-2">
+                  <Label>Preço</Label>
                   <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        appointment.status === "confirmed"
-                          ? "bg-primary/20 text-primary"
-                          : "bg-muted-foreground/20 text-muted-foreground"
-                      }`}
-                    >
-                      {appointment.status === "confirmed" ? "Confirmado" : "Pendente"}
+                    <span className="font-medium">
+                      R$ {appointment.servico.preco.toFixed(2)}
                     </span>
                   </div>
-                )}
+                </div>
+              )}
+
+              {/* Status - Editável */}
+              <div className="space-y-2">
+                <Label htmlFor="status">Status</Label>
+                <Select
+                  value={selectedStatus}
+                  onValueChange={handleStatusChange}
+                  disabled={loading}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="PENDENTE">Pendente</SelectItem>
+                    <SelectItem value="CONFIRMADO">Confirmado</SelectItem>
+                    <SelectItem value="CONCLUIDO">Concluído</SelectItem>
+                    <SelectItem value="CANCELADO">Cancelado</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
+            {/* Botão de Avaliação - só aparece se status for CONCLUIDO */}
+            {selectedStatus === "CONCLUIDO" && appointment.barbeiro && (
+              <div className="pt-4 border-t">
+                <AvaliarBarbeiro
+                  barbeiroId={appointment.barbeiroId}
+                  barbeiroNome={appointment.barbeiro.nome || "Barbeiro"}
+                  agendamentoId={appointment.id}
+                  onSuccess={() => {
+                    toast({
+                      title: "Sucesso",
+                      description: "Avaliação enviada! Obrigado pelo feedback.",
+                    });
+                  }}
+                />
+              </div>
+            )}
+
             <div className="flex items-center justify-between pt-4 border-t">
-              {isEditing ? (
-                <div className="flex gap-2 w-full">
-                  <Button
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => {
-                      setIsEditing(false);
-                      setFormData({
-                        client: appointment.client,
-                        time: appointment.time,
-                        barber: appointment.barber,
-                        service: appointment.service,
-                        status: appointment.status,
-                      });
-                    }}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button className="flex-1" onClick={handleSave}>
-                    Salvar Alterações
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  <Button
-                    variant="destructive"
-                    onClick={() => setShowDeleteDialog(true)}
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Excluir
-                  </Button>
-                  <Button onClick={() => setIsEditing(true)}>Editar</Button>
-                </>
-              )}
+              <Button
+                variant="destructive"
+                onClick={() => setShowDeleteDialog(true)}
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Excluir
+              </Button>
+              <Button variant="outline" onClick={() => setOpen(false)}>
+                Fechar
+              </Button>
             </div>
           </div>
         </DialogContent>
@@ -282,13 +220,15 @@ export const DetalhesAgendamento = ({
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir este agendamento? Esta ação não pode
-              ser desfeita.
+              Tem certeza que deseja excluir este agendamento? Esta ação não
+              pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Excluir</AlertDialogAction>
+            <AlertDialogAction onClick={handleDelete}>
+              Excluir
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

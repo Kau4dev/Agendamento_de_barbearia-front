@@ -1,25 +1,82 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Scissors } from "lucide-react";
+import { Scissors, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
+import { loginSchema } from "@/lib/validations";
+import { z } from "zod";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {}
+  );
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (email && password) {
-      toast.success("Login realizado com sucesso!");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
       navigate("/dashboard");
-    } else {
-      toast.error("Por favor, preencha todos os campos");
+    }
+  }, [navigate]);
+
+  const validateField = (field: "email" | "password", value: string) => {
+    // Limpa o erro enquanto digita se o campo estiver vazio
+    if (!value) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+      return;
+    }
+
+    try {
+      if (field === "email") {
+        loginSchema.pick({ email: true }).parse({ email: value });
+      } else {
+        loginSchema.pick({ password: true }).parse({ password: value });
+      }
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setErrors((prev) => ({ ...prev, [field]: error.errors[0].message }));
+      }
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      // Validação completa do formulário
+      loginSchema.parse({ email, password });
+      setErrors({});
+
+      setLoading(true);
+      await login(email, password);
+      navigate("/dashboard");
+      toast.success("Login realizado com sucesso! 🎉");
+    } catch (error: unknown) {
+      if (error instanceof z.ZodError) {
+        const fieldErrors: { email?: string; password?: string } = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            fieldErrors[err.path[0] as "email" | "password"] = err.message;
+          }
+        });
+        setErrors(fieldErrors);
+        toast.error("Por favor, corrija os erros no formulário");
+      } else if (error instanceof Error) {
+        toast.error(error.message || "Erro ao fazer login");
+      } else {
+        toast.error("Erro ao fazer login");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,9 +101,16 @@ const Login = () => {
               type="email"
               placeholder="seu@email.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              onChange={(e) => {
+                setEmail(e.target.value);
+                validateField("email", e.target.value);
+              }}
+              className={errors.email ? "border-destructive" : ""}
+              disabled={loading}
             />
+            {errors.email && (
+              <p className="text-sm text-destructive">{errors.email}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -56,13 +120,21 @@ const Login = () => {
               type="password"
               placeholder="••••••••"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              onChange={(e) => {
+                setPassword(e.target.value);
+                validateField("password", e.target.value);
+              }}
+              className={errors.password ? "border-destructive" : ""}
+              disabled={loading}
             />
+            {errors.password && (
+              <p className="text-sm text-destructive">{errors.password}</p>
+            )}
           </div>
 
-          <Button type="submit" className="w-full">
-            Entrar
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {loading ? "Entrando..." : "Entrar"}
           </Button>
 
           <div className="text-center text-sm">

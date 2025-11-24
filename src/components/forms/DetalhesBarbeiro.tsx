@@ -22,20 +22,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { User, Phone, Mail, Star, Calendar, Trash2 } from "lucide-react";
-
-interface Barber {
-  id: number;
-  name: string;
-  specialty: string;
-  phone: string;
-  email: string;
-  appointments: number;
-  rating: number;
-}
+import { GerenciarAgenda } from "./GerenciarAgenda";
+import type { Barbeiro } from "@/types";
 
 interface DetalhesBarbeiroProps {
-  barber: Barber;
-  onUpdate: (id: number, data: Partial<Barber>) => void;
+  barber: Barbeiro;
+  onUpdate: (id: number, data: Partial<Barbeiro>) => void;
   onDelete: (id: number) => void;
 }
 
@@ -50,18 +42,18 @@ export const DetalhesBarbeiro = ({
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
-    name: barber.name,
-    specialty: barber.specialty,
-    phone: barber.phone,
-    email: barber.email,
+    nome: barber.nome,
+    especialidade: barber.especialidade || "",
+    telefone: barber.telefone,
+    email: barber.email || "",
   });
 
   useEffect(() => {
     setFormData({
-      name: barber.name,
-      specialty: barber.specialty,
-      phone: barber.phone,
-      email: barber.email,
+      nome: barber.nome,
+      especialidade: barber.especialidade || "",
+      telefone: barber.telefone,
+      email: barber.email || "",
     });
   }, [barber]);
 
@@ -108,23 +100,29 @@ export const DetalhesBarbeiro = ({
             <div className="flex items-center gap-4 pb-4 border-b">
               <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center">
                 <span className="text-2xl font-bold text-primary">
-                  {barber.name.split(" ").map((n) => n[0]).join("")}
+                  {barber.nome
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
                 </span>
               </div>
               <div className="flex-1">
                 {isEditing ? (
                   <div className="space-y-2">
                     <Input
-                      value={formData.name}
+                      value={formData.nome}
                       onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
+                        setFormData({ ...formData, nome: e.target.value })
                       }
                       placeholder="Nome completo"
                     />
                     <Input
-                      value={formData.specialty}
+                      value={formData.especialidade}
                       onChange={(e) =>
-                        setFormData({ ...formData, specialty: e.target.value })
+                        setFormData({
+                          ...formData,
+                          especialidade: e.target.value,
+                        })
                       }
                       placeholder="Especialidade"
                     />
@@ -132,16 +130,20 @@ export const DetalhesBarbeiro = ({
                 ) : (
                   <>
                     <h3 className="text-2xl font-bold text-foreground">
-                      {barber.name}
+                      {barber.nome}
                     </h3>
-                    <p className="text-muted-foreground">{barber.specialty}</p>
+                    <p className="text-muted-foreground">
+                      {barber.especialidade}
+                    </p>
                   </>
                 )}
               </div>
               <div className="flex flex-col items-center gap-2">
                 <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-primary/20">
                   <Star className="w-4 h-4 text-primary fill-primary" />
-                  <span className="font-bold text-primary">{barber.rating}</span>
+                  <span className="font-bold text-primary">
+                    {barber.rating}
+                  </span>
                 </div>
               </div>
             </div>
@@ -151,15 +153,15 @@ export const DetalhesBarbeiro = ({
                 <Label>Telefone</Label>
                 {isEditing ? (
                   <Input
-                    value={formData.phone}
+                    value={formData.telefone}
                     onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
+                      setFormData({ ...formData, telefone: e.target.value })
                     }
                   />
                 ) : (
                   <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
                     <Phone className="w-4 h-4 text-primary" />
-                    <span className="font-medium">{barber.phone}</span>
+                    <span className="font-medium">{barber.telefone}</span>
                   </div>
                 )}
               </div>
@@ -194,15 +196,26 @@ export const DetalhesBarbeiro = ({
                 <div>
                   <p className="text-sm text-muted-foreground">Agendamentos</p>
                   <p className="text-2xl font-bold text-primary">
-                    {barber.appointments}
+                    {barber.agendamentos ? barber.agendamentos.length : 0}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Avaliação</p>
-                  <p className="text-2xl font-bold text-primary">{barber.rating}</p>
+                  <p className="text-2xl font-bold text-primary">
+                    {barber.rating}
+                  </p>
                 </div>
               </div>
             </div>
+
+            {!isEditing && (
+              <div className="pt-4 border-t">
+                <GerenciarAgenda
+                  barbeiroId={barber.id}
+                  barbeiroNome={barber.nome}
+                />
+              </div>
+            )}
 
             <div className="flex items-center justify-between pt-4 border-t">
               {isEditing ? (
@@ -213,9 +226,9 @@ export const DetalhesBarbeiro = ({
                     onClick={() => {
                       setIsEditing(false);
                       setFormData({
-                        name: barber.name,
-                        specialty: barber.specialty,
-                        phone: barber.phone,
+                        nome: barber.nome,
+                        especialidade: barber.especialidade,
+                        telefone: barber.telefone,
                         email: barber.email,
                       });
                     }}
@@ -248,13 +261,15 @@ export const DetalhesBarbeiro = ({
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar remoção</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja remover este barbeiro da equipe? Esta ação não
-              pode ser desfeita.
+              Tem certeza que deseja remover este barbeiro da equipe? Esta ação
+              não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Remover</AlertDialogAction>
+            <AlertDialogAction onClick={handleDelete}>
+              Remover
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

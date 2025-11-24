@@ -10,30 +10,37 @@ import {
 import { Button } from "@/components/ui/button";
 import { User, Phone, Mail, Calendar, Clock, Scissors } from "lucide-react";
 import { Card } from "@/components/ui/card";
-
-interface Client {
-  id: number;
-  name: string;
-  phone: string;
-  email: string;
-  lastVisit: string;
-  totalVisits: number;
-}
+import type { Cliente, Agendamento } from "@/types";
 
 interface PerfilClienteProps {
-  client: Client;
+  client: Cliente;
 }
 
 export const PerfilCliente = ({ client }: PerfilClienteProps) => {
   const [open, setOpen] = useState(false);
 
-  // Mock data para histórico de agendamentos
-  const appointmentHistory = [
-    { date: "15/01/2025", service: "Corte + Barba", barber: "Carlos Silva", value: "R$ 50,00" },
-    { date: "02/01/2025", service: "Corte", barber: "Roberto Santos", value: "R$ 30,00" },
-    { date: "18/12/2024", service: "Barba", barber: "Carlos Silva", value: "R$ 25,00" },
-    { date: "05/12/2024", service: "Corte + Barba", barber: "André Costa", value: "R$ 50,00" },
-  ];
+  // Construir histórico a partir dos agendamentos incluídos no cliente
+  const appointmentHistory = (client.agendamentos || []).map(
+    (ag: Agendamento) => ({
+      date: new Date(ag.dataHora).toLocaleDateString("pt-BR"),
+      service: ag.servico?.nome || "Serviço",
+      barber: ag.barbeiro?.nome || "Barbeiro",
+      value: ag.servico ? `R$ ${ag.servico.preco.toFixed(2)}` : "R$ 0,00",
+    })
+  );
+
+  const totalVisits = client.agendamentos ? client.agendamentos.length : 0;
+  const lastVisit =
+    client.agendamentos && client.agendamentos.length > 0
+      ? new Date(
+          client.agendamentos[client.agendamentos.length - 1].dataHora
+        ).toLocaleDateString("pt-BR")
+      : "-";
+
+  const totalSpent = (client.agendamentos || []).reduce(
+    (acc, ag) => acc + (ag.servico?.preco || 0),
+    0
+  );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -55,20 +62,30 @@ export const PerfilCliente = ({ client }: PerfilClienteProps) => {
           <div className="flex items-center gap-4 pb-4 border-b">
             <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center">
               <span className="text-2xl font-bold text-primary">
-                {client.name.split(" ").map((n) => n[0]).join("")}
+                {client.nome
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
               </span>
             </div>
             <div className="flex-1">
-              <h3 className="text-2xl font-bold text-foreground">{client.name}</h3>
+              <h3 className="text-2xl font-bold text-foreground">
+                {client.nome}
+              </h3>
               <p className="text-sm text-muted-foreground mt-1">
-                Cliente desde {client.lastVisit}
+                Cliente desde{" "}
+                {new Date(client.createdAt || Date.now()).toLocaleDateString(
+                  "pt-BR"
+                )}
               </p>
             </div>
             <div className="flex flex-col items-center gap-2">
               <div className="px-4 py-2 rounded-lg bg-primary/20">
-                <p className="text-xs text-muted-foreground">Total de Visitas</p>
+                <p className="text-xs text-muted-foreground">
+                  Total de Visitas
+                </p>
                 <p className="text-2xl font-bold text-primary text-center">
-                  {client.totalVisits}
+                  {totalVisits}
                 </p>
               </div>
             </div>
@@ -83,7 +100,9 @@ export const PerfilCliente = ({ client }: PerfilClienteProps) => {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Telefone</p>
-                  <p className="font-medium text-foreground">{client.phone}</p>
+                  <p className="font-medium text-foreground">
+                    {client.telefone}
+                  </p>
                 </div>
               </div>
             </Card>
@@ -107,16 +126,20 @@ export const PerfilCliente = ({ client }: PerfilClienteProps) => {
               <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-2">
                 <Calendar className="w-6 h-6 text-primary" />
               </div>
-              <p className="text-2xl font-bold text-primary">{client.totalVisits}</p>
-              <p className="text-xs text-muted-foreground mt-1">Visitas Total</p>
+              <p className="text-2xl font-bold text-primary">{totalVisits}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Visitas Total
+              </p>
             </Card>
 
             <Card className="p-4 text-center">
               <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-2">
                 <Clock className="w-6 h-6 text-primary" />
               </div>
-              <p className="text-2xl font-bold text-primary">{client.lastVisit}</p>
-              <p className="text-xs text-muted-foreground mt-1">Última Visita</p>
+              <p className="text-2xl font-bold text-primary">{lastVisit}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Última Visita
+              </p>
             </Card>
 
             <Card className="p-4 text-center">
@@ -124,7 +147,7 @@ export const PerfilCliente = ({ client }: PerfilClienteProps) => {
                 <Scissors className="w-6 h-6 text-primary" />
               </div>
               <p className="text-2xl font-bold text-primary">
-                R$ {(client.totalVisits * 35).toFixed(2)}
+                R$ {totalSpent.toFixed(2)}
               </p>
               <p className="text-xs text-muted-foreground mt-1">Total Gasto</p>
             </Card>
@@ -136,38 +159,49 @@ export const PerfilCliente = ({ client }: PerfilClienteProps) => {
               <Calendar className="w-5 h-5 text-primary" />
               Histórico de Agendamentos
             </h4>
-            <div className="space-y-3">
-              {appointmentHistory.map((appointment, index) => (
-                <Card
-                  key={index}
-                  className="p-4 hover:border-primary/50 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="flex flex-col items-center justify-center p-3 rounded-lg bg-primary/10">
-                        <span className="text-xs font-medium text-muted-foreground">
-                          Data
-                        </span>
-                        <span className="text-sm font-bold text-primary">
-                          {appointment.date}
-                        </span>
+            {appointmentHistory.length === 0 ? (
+              <div className="text-center py-12">
+                <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">
+                  Nenhum agendamento encontrado
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {appointmentHistory.map((appointment, index) => (
+                  <Card
+                    key={index}
+                    className="p-4 hover:border-primary/50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="flex flex-col items-center justify-center p-3 rounded-lg bg-primary/10">
+                          <span className="text-xs font-medium text-muted-foreground">
+                            Data
+                          </span>
+                          <span className="text-sm font-bold text-primary">
+                            {appointment.date}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground">
+                            {appointment.service}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Barbeiro: {appointment.barber}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          {appointment.service}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          Barbeiro: {appointment.barber}
+                      <div className="text-right">
+                        <p className="font-bold text-primary">
+                          {appointment.value}
                         </p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-bold text-primary">{appointment.value}</p>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end pt-4 border-t">
