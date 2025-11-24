@@ -1,73 +1,103 @@
-# Welcome to your Lovable project
+# Agendamento de Barbearia - Frontend
 
-## Project info
+Este é o repositório frontend do projeto **Agendamento de Barbearia**, desenvolvido com **Vite**, **React**, **TypeScript**, **Tailwind CSS** e **shadcn-ui**.
 
-**URL**: https://lovable.dev/projects/46534a86-346f-4a2d-a0d4-1363ea11b1c0
+Abaixo está uma visão geral atualizada do projeto com base nos arquivos e estrutura visíveis no repositório.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 📦 Tecnologias Utilizadas
 
-**Use Lovable**
+* **Vite**
+* **React**
+* **TypeScript**
+* **Tailwind CSS**
+* **shadcn-ui**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/46534a86-346f-4a2d-a0d4-1363ea11b1c0) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📁 Estrutura do Projeto (com base no repositório)
 
-**Use your preferred IDE**
+### Diretórios principais
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+* **public/** – Arquivos públicos utilizados no projeto.
+* **src/** – Código-fonte do aplicativo (componentes, páginas, lógicas, estilização, etc.).
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Arquivos importantes
 
-Follow these steps:
+* `.gitignore` – Define arquivos e pastas ignorados pelo Git.
+* `.stylelintrc.json` – Configurações do Stylelint.
+* `README.md` – Documentação atual.
+* `bun.lockb` – Lockfile do Bun.
+* `components.json` – Configurações dos componentes do shadcn-ui.
+* `eslint.config.js` – Configuração do ESLint.
+* `index.html` – Arquivo HTML base do projeto.
+* `package.json` – Dependências e scripts do projeto.
+* Arquivos `tsconfig.*.json` – Configurações do TypeScript.
+* `tailwind.config.ts` – Configurações do Tailwind CSS.
+* `vite.config.ts` – Configuração do Vite.
+
+---
+
+## 🚀 Como editar este projeto
+
+Você pode editar este projeto de várias formas:
+
+### 1. **Usando a plataforma Lovable**
+
+Acesse: [https://lovable.dev/projects/46534a86-346f-4a2d-a0d4-1363ea11b1c0](https://lovable.dev/projects/46534a86-346f-4a2d-a0d4-1363ea11b1c0)
+
+Edite com prompts e as alterações serão commitadas automaticamente.
+
+### 2. **Usando sua IDE local**
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
+git clone <URL_DO_REPOSITORIO>
+cd <NOME_DO_PROJETO>
 npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### 3. **Editando diretamente no GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+* Vá até o arquivo desejado
+* Clique no ícone de lápis (Editar)
+* Faça suas alterações e commite
 
-**Use GitHub Codespaces**
+### 4. **Usando GitHub Codespaces**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+* Clique em **Code** → aba **Codespaces**
+* Crie um novo espaço e edite o código online
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## 🌐 Deploy
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Para publicar seu projeto:
 
-## How can I deploy this project?
+* Abra o Lovable
+* Clique em **Share → Publish**
 
-Simply open [Lovable](https://lovable.dev/projects/46534a86-346f-4a2d-a0d4-1363ea11b1c0) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## 🌍 Conectar um Domínio Personalizado
 
-Yes, you can!
+É possível conectar um domínio personalizado:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+* Vá em **Project → Settings → Domains**
+* Clique em **Connect Domain**
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Mais detalhes: [https://docs.lovable.dev/features/custom-domain#custom-domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+---
+
+## 👤 Contribuidores (grupo)
+
+* Erick Schinneyder (RGM 44093888)
+* Kauã
+* Felipe de Oliveira (RGM:42862451)
+
+---
+
+
+
