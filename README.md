@@ -1,102 +1,61 @@
-# Agendamento de Barbearia - Frontend
+## Agendamento de Barbearia - Frontend
 
-Este é o repositório frontend do projeto **Agendamento de Barbearia**, desenvolvido com **Vite**, **React**, **TypeScript**, **Tailwind CSS** e **shadcn-ui**.
-
-Abaixo está uma visão geral atualizada do projeto 
----
-
-## 📦 Tecnologias Utilizadas
-
-* **Vite**
-* **React**
-* **TypeScript**
-* **Tailwind CSS**
-* **shadcn-ui**
+Frontend do projeto Agendamento de Barbearia, desenvolvido com `Vite`, `React` e `TypeScript`, usando `Tailwind CSS` e a biblioteca `shadcn-ui` para componentes.
 
 ---
 
-## 📁 Estrutura do Projeto 
+**Tecnologias:**
 
-### Diretórios principais
-
-* **public/** – Arquivos públicos utilizados no projeto.
-* **src/** – Código-fonte  (componentes, páginas, lógicas, estilização, etc.).
-
-### Arquivos importantes
-
-* `.gitignore` – Define arquivos e pastas ignorados pelo Git.
-* `.stylelintrc.json` – Configurações do Stylelint.
-* `README.md` – Documentação atual.
-* `bun.lockb` – Lockfile do Bun.
-* `components.json` – Configurações dos componentes do shadcn-ui.
-* `eslint.config.js` – Configuração do ESLint.
-* `index.html` – Arquivo HTML base do projeto.
-* `package.json` – Dependências e scripts do projeto.
-* Arquivos `tsconfig.*.json` – Configurações do TypeScript.
-* `tailwind.config.ts` – Configurações do Tailwind CSS.
-* `vite.config.ts` – Configuração do Vite.
+- `Vite` — bundler/development server
+- `React` — biblioteca UI
+- `TypeScript` — tipagem estática
+- `Tailwind CSS` — utilitários de estilo
+- `shadcn-ui` — componentes baseados em Radix
 
 ---
 
-## 🚀 Como editar este projeto
+**Estrutura (visão geral):**
 
-Você pode editar este projeto de várias formas:
+- `public/` : arquivos públicos
+- `src/` : código-fonte (componentes, páginas, estilos)
+- `src/components/` : componentes reutilizáveis
+- `src/pages/` : páginas do app
+- `package.json` : dependências e scripts
 
-### 1. **Usando a plataforma Lovable**
+---
 
-Acesse: [https://lovable.dev/projects/46534a86-346f-4a2d-a0d4-1363ea11b1c0](https://lovable.dev/projects/46534a86-346f-4a2d-a0d4-1363ea11b1c0)
+**Como rodar localmente:**
 
-Edite com prompts e as alterações serão commitadas automaticamente.
+1. Clone o repositório:
 
-### 2. **Usando sua IDE local**
-
-```sh
+```
 git clone <URL_DO_REPOSITORIO>
-cd <NOME_DO_PROJETO>
-npm i
+cd agendamento-de-barbearia-front
+```
+
+2. Instale dependências e inicie o servidor de desenvolvimento:
+
+```
+npm install
 npm run dev
 ```
 
-### 3. **Editando diretamente no GitHub**
-
-* Vá até o arquivo desejado
-* Clique no ícone de lápis (Editar)
-* Faça suas alterações e commite
-
-### 4. **Usando GitHub Codespaces**
-
-* Clique em **Code** → aba **Codespaces**
-* Crie um novo espaço e edite o código online
+O servidor de desenvolvimento normalmente ficará disponível em `http://localhost:5173`.
 
 ---
 
-## 🌐 Deploy
+**Deploy:**
 
-Para publicar seu projeto:
-
-* Abra o Lovable
-* Clique em **Share → Publish**
+O frontend está publicado em: `https://agendamento-de-barbearia-front.onrender.com`
 
 ---
 
-## 🌍 Conectar um Domínio Personalizado
+**Contribuidores:**
 
-É possível conectar um domínio personalizado:
-
-* Vá em **Project → Settings → Domains**
-* Clique em **Connect Domain**
-
-Mais detalhes: [https://docs.lovable.dev/features/custom-domain#custom-domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- **Erick Schinneyder**: RGM `44093888`
+- **Kauã Victor**: RGM `38994151`
+- **Felipe de Oliveira**: RGM `42862451`
 
 ---
 
-## 👤 Contribuidores (grupo)
-
-* Erick Schinneyder (RGM 44093888)
-* Kauã Victor (RGM 38994151)
-* Felipe de Oliveira (RGM:42862451)
-
----
-
-
-
+Se quiser, posso também gerar um `CHANGELOG.md`, adicionar badges de CI/Deploy ou preparar instruções de build para produção. Diga o que prefere a seguir.
